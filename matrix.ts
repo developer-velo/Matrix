@@ -12,6 +12,17 @@ interface Options {
   threshold: number;
 }
 
+interface Metrics {
+  gap: number;
+  radius: number;
+  offset: number;
+}
+
+interface Dimension {
+  width: number;
+  height: number;
+}
+
 const defaultOptions: Options = {
   size: 2.0,
   density: 0.5,
@@ -29,6 +40,39 @@ class Matrix implements Model {
   ) {
     this.options = { ...defaultOptions, ...options };
     this.resolution = resolution;
+  }
+
+  private static metrics(size: number, density: number, padding: number): Metrics {
+    const gap = size / density;
+    const radius = size / 2;
+    const offset = radius + padding;
+
+    return { gap, radius, offset };
+  }
+
+  private static scale(source: Dimension, resolution: number): Dimension {
+    const { width, height } = source;
+
+    const target = resolution;
+    const ratio = target / height;
+
+    const dimension: Dimension = {
+      width: Math.round(width * ratio),
+      height: Math.round(target),
+    };
+
+    return dimension;
+  }
+
+  private static rescale(source: Dimension, gap: number, padding: number): Dimension {
+    const { width, height } = source;
+
+    const dimension: Dimension = {
+      width: Math.ceil((width * gap) + (padding * 2)),
+      height: Math.ceil((height * gap) + (padding * 2)),
+    };
+
+    return dimension;
   }
 }
 
