@@ -1,5 +1,8 @@
 type Resolution = 16 | 32 | 64 | 128 | 256 | 512;
 
+type RGBAPayload = `rgba(${number},${number},${number},${number})`;
+type RGBAStructure = [R: number, G: number, B: number, A: number];
+
 interface Model {
   options: Options;
   resolution: Resolution;
@@ -18,9 +21,24 @@ interface Metrics {
   offset: number;
 }
 
+interface Pixel {
+  color: Color;
+  position: Position;
+}
+
+interface Color {
+  value: RGBAPayload;
+  structure: RGBAStructure;
+}
+
 interface Dimension {
   width: number;
   height: number;
+}
+
+interface Position {
+  x: number;
+  y: number;
 }
 
 const defaultOptions: Options = {
@@ -40,6 +58,42 @@ class Matrix implements Model {
   ) {
     this.options = { ...defaultOptions, ...options };
     this.resolution = resolution;
+  }
+
+  private static * iterator(dimension: Dimension): Generator<Position> {
+    const { width, height } = dimension;
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        yield { x, y };
+      }
+    }
+  }
+
+  private static color(data: Uint8ClampedArray, width: number, position: Position): Color {
+    const { x, y } = position;
+
+    const length = 4;
+    const offset = (y * width + x) * length;
+
+    const buffer = data.subarray(offset, offset + length);
+    const structure = [...buffer] as RGBAStructure;
+
+    const [R, G, B, A] = structure;
+    const value: RGBAPayload = `rgba(${R},${G},${B},${A})`;
+
+    return { value, structure };
+  }
+
+  private static position(source: Position, gap: number, offset: number): Position {
+    const { x, y } = source;
+
+    const position: Position = {
+      x: (x * gap) + offset,
+      y: (y * gap) + offset,
+    };
+
+    return position;
   }
 
   private static metrics(size: number, density: number, padding: number): Metrics {
