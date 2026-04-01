@@ -4,7 +4,8 @@ const config: BuildConfig = {
   entrypoints: ["index.ts"],
   target: "node",
   outdir: "output",
-  sourcemap: "external"
+  sourcemap: "external",
+  external: ["canvas"],
 };
 
 await Bun.build({

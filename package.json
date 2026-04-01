@@ -38,6 +38,9 @@
     "build": "tsc && bun build.ts",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "canvas": "3.2.2"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "typescript": "5.9.3"
