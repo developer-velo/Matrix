@@ -1,0 +1,29 @@
+{
+  "name": "matrix",
+  "description": "Memory-efficient image to SVG dot-matrix converter.",
+  "version": "0.0.0-proto",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "image",
+    "matrix",
+    "typescript",
+    "javascript"
+  ],
+  "author": {
+    "name": "developer-velo",
+    "url": "https://github.com/developer-velo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developer-velo/matrix.git"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/developer-velo"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "5.9.3"
+  }
+}
