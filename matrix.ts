@@ -1,4 +1,4 @@
-import type { Canvas, CanvasRenderingContext2D as Context } from "canvas";
+import type { Canvas, CanvasRenderingContext2D as Context, Image } from "canvas";
 import { createCanvas } from "canvas";
 
 type Resolution = 16 | 32 | 64 | 128 | 256 | 512;
@@ -78,6 +78,27 @@ class Matrix implements Model {
     context.imageSmoothingEnabled = false;
 
     return { canvas, context };
+  }
+
+  private * extract(image: Image, dimension: Dimension, metrics: Metrics): Generator<Pixel> {
+    const { width, height } = dimension;
+
+    const { context } = this.surface(dimension, "image");
+    context.drawImage(image, 0, 0, width, height);
+
+    const data = context.getImageData(0, 0, width, height)["data"];
+
+    for (let position of Matrix.iterator(dimension)) {
+      const { threshold } = this.options;
+
+      const color = Matrix.color(data, width, position);
+      if (color.structure[3] < threshold) continue;
+
+      const { gap, offset } = metrics;
+      position = Matrix.position(position, gap, offset);
+
+      yield { position, color };
+    }
   }
 
   private static * iterator(dimension: Dimension): Generator<Position> {
