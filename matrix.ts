@@ -1,6 +1,9 @@
 import type { Canvas, CanvasRenderingContext2D as Context, Image } from "canvas";
 import { createCanvas } from "canvas";
 
+import { resolve } from "node:path";
+import { readFile, writeFile } from "node:fs/promises";
+
 type Resolution = 16 | 32 | 64 | 128 | 256 | 512;
 
 type RGBAPayload = `rgba(${number},${number},${number},${number})`;
@@ -55,6 +58,16 @@ const defaultOptions: Options = {
   padding: 2.0,
   threshold: 80.0,
 };
+
+async function readBuffer(location: string): Promise<Buffer> {
+  const path = resolve(process.cwd(), location);
+  return Buffer.from(await readFile(path, "binary"));
+}
+
+async function writeBuffer(location: string, buffer: Buffer): Promise<void> {
+  const path = resolve(process.cwd(), location);
+  await writeFile(path, buffer.toString(), "binary");
+}
 
 class Matrix implements Model {
   public options: Options;
