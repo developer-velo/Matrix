@@ -80,6 +80,24 @@ class Matrix implements Model {
     return { canvas, context };
   }
 
+  private render(dimension: Dimension, metrics: Metrics, pixel: Generator<Pixel>): Buffer {
+    const { canvas, context } = this.surface(dimension, "svg");
+
+    for (const { position, color } of pixel) {
+      const { x, y } = position;
+      const { radius } = metrics;
+
+      context.beginPath();
+      context.arc(x, y, radius, 0, 2 * Math.PI);
+      context.closePath();
+
+      context.fillStyle = color.value;
+      context.fill();
+    }
+
+    return canvas.toBuffer();
+  }
+
   private * extract(image: Image, dimension: Dimension, metrics: Metrics): Generator<Pixel> {
     const { width, height } = dimension;
 
