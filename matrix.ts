@@ -1,5 +1,5 @@
 import type { Canvas, CanvasRenderingContext2D as Context, Image } from "canvas";
-import { createCanvas } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 
 import { resolve } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
@@ -79,6 +79,24 @@ class Matrix implements Model {
   ) {
     this.options = { ...defaultOptions, ...options };
     this.resolution = resolution;
+  }
+
+  public async convert(input: string, output: string): Promise<void> {
+    const { resolution, options } = this;
+
+    const { size, density, padding } = options;
+    const metrics = Matrix.metrics(size, density, padding);
+
+    const file = await readBuffer(input);
+    const image = await loadImage(file);
+
+    const dimension = Matrix.scale(image, resolution);
+    const target = Matrix.rescale(dimension, metrics.gap, padding);
+
+    const pixel = this.extract(image, dimension, metrics);
+    const payload = this.render(target, metrics, pixel);
+
+    await writeBuffer(output, payload);
   }
 
   private surface(dimension: Dimension, type: "image" | "svg"): Surface {
