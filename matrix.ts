@@ -1,3 +1,6 @@
+import type { Canvas, CanvasRenderingContext2D as Context } from "canvas";
+import { createCanvas } from "canvas";
+
 type Resolution = 16 | 32 | 64 | 128 | 256 | 512;
 
 type RGBAPayload = `rgba(${number},${number},${number},${number})`;
@@ -6,6 +9,11 @@ type RGBAStructure = [R: number, G: number, B: number, A: number];
 interface Model {
   options: Options;
   resolution: Resolution;
+}
+
+interface Surface {
+  canvas: Canvas;
+  context: Context;
 }
 
 interface Options {
@@ -58,6 +66,18 @@ class Matrix implements Model {
   ) {
     this.options = { ...defaultOptions, ...options };
     this.resolution = resolution;
+  }
+
+  private surface(dimension: Dimension, type: "image" | "svg"): Surface {
+    const { width, height } = dimension;
+
+    const canvas = createCanvas(width, height, type as any);
+    const context = canvas.getContext("2d");
+
+    context.antialias = "none";
+    context.imageSmoothingEnabled = false;
+
+    return { canvas, context };
   }
 
   private static * iterator(dimension: Dimension): Generator<Position> {
