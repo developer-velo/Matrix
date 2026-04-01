@@ -1,1 +1,2 @@
-console.log("Hello, Matrix!");
+export * from "./matrix";
+export { default } from "./matrix";
