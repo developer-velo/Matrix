@@ -3,14 +3,21 @@
     "target": "ES2022",
     "lib": ["ES2022"],
 
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
     "isolatedModules": false,
     "esModuleInterop": true,
+
+    "rootDir": ".",
+    "outDir": "output",
+
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
 
     "strict": true,
     "skipLibCheck": true
    },
    "include": ["index.ts"],
-   "exclude": ["node_modules"]
+   "exclude": ["node_modules", "output"]
 }
