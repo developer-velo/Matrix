@@ -61,12 +61,12 @@ const defaultOptions: Options = {
 
 async function readBuffer(location: string): Promise<Buffer> {
   const path = resolve(process.cwd(), location);
-  return Buffer.from(await readFile(path, "binary"));
+  return Buffer.from(await readFile(path));
 }
 
 async function writeBuffer(location: string, buffer: Buffer): Promise<void> {
   const path = resolve(process.cwd(), location);
-  await writeFile(path, buffer.toString(), "binary");
+  await writeFile(path, buffer.toString());
 }
 
 class Matrix implements Model {
