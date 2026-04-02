@@ -1,5 +1,5 @@
-import type { Canvas, CanvasRenderingContext2D as Context, Image } from "canvas";
-import { createCanvas, loadImage } from "canvas";
+import type { CanvasRenderingContext2D as Context } from "skia-canvas";
+import { Canvas, loadImage, type Image } from "skia-canvas";
 
 import { resolve } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
@@ -94,25 +94,25 @@ class Matrix implements Model {
     const target = Matrix.rescale(dimension, metrics.gap, padding);
 
     const pixel = this.extract(image, dimension, metrics);
-    const payload = this.render(target, metrics, pixel);
+    const payload = await this.render(target, metrics, pixel);
 
     await writeBuffer(output, payload);
   }
 
-  private surface(dimension: Dimension, type: "image" | "svg"): Surface {
+  private surface(dimension: Dimension): Surface {
     const { width, height } = dimension;
 
-    const canvas = createCanvas(width, height, type as any);
-    const context = canvas.getContext("2d");
+    const canvas = new Canvas(width, height);
+    canvas.gpu = true;
 
-    context.antialias = "none";
+    const context = canvas.getContext("2d");
     context.imageSmoothingEnabled = false;
 
     return { canvas, context };
   }
 
-  private render(dimension: Dimension, metrics: Metrics, pixel: Generator<Pixel>): Buffer {
-    const { canvas, context } = this.surface(dimension, "svg");
+  private async render(dimension: Dimension, metrics: Metrics, pixel: Generator<Pixel>): Promise<Buffer> {
+    const { canvas, context } = this.surface(dimension);
 
     for (const { position, color } of pixel) {
       const { x, y } = position;
@@ -126,13 +126,13 @@ class Matrix implements Model {
       context.fill();
     }
 
-    return canvas.toBuffer();
+    return await canvas.toBuffer("svg");
   }
 
   private * extract(image: Image, dimension: Dimension, metrics: Metrics): Generator<Pixel> {
     const { width, height } = dimension;
 
-    const { context } = this.surface(dimension, "image");
+    const { context } = this.surface(dimension);
     context.drawImage(image, 0, 0, width, height);
 
     const data = context.getImageData(0, 0, width, height)["data"];
