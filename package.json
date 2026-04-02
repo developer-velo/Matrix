@@ -1,7 +1,7 @@
 {
   "name": "matrix",
   "description": "Memory-efficient image to SVG dot-matrix converter.",
-  "version": "0.1.0-proto",
+  "version": "0.2.0-proto",
   "license": "MIT",
   "type": "module",
   "keywords": [
