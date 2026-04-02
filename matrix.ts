@@ -91,7 +91,7 @@ class Matrix implements Model {
     const image = await loadImage(file);
 
     const dimension = Matrix.scale(image, resolution);
-    const target = Matrix.rescale(dimension, metrics.gap, padding);
+    const target = Matrix.rescale(dimension, size, metrics.gap, padding);
 
     const pixel = this.extract(image, dimension, metrics);
     const payload = await this.render(target, metrics, pixel);
@@ -208,12 +208,15 @@ class Matrix implements Model {
     return dimension;
   }
 
-  private static rescale(source: Dimension, gap: number, padding: number): Dimension {
+  private static rescale(source: Dimension, size: number, gap: number, padding: number): Dimension {
     const { width, height } = source;
 
+    const horizontal = ((width - 1) * gap) + size;
+    const vertical = ((height - 1) * gap) + size;
+
     const dimension: Dimension = {
-      width: Math.ceil((width * gap) + (padding * 2)),
-      height: Math.ceil((height * gap) + (padding * 2)),
+      width: Math.ceil(horizontal + (padding * 2)),
+      height: Math.ceil(vertical + (padding * 2)),
     };
 
     return dimension;
