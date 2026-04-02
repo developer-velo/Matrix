@@ -17,7 +17,7 @@ from perfect, so use it at your own risk.
 ---
 
 - **Runtime:** [Bun](https://bun.sh) `+1.3.9`
-- **Library:** [Cairo](https://cairographics.org) `+1.10.0` (**prebuilt binaries available;** manual build is required on unsupported architectures, see: [node-canvas](https://github.com/Automattic/node-canvas#compiling) for more details)
+- **Library:** [Skia](https://skia-canvas.org) `+3.0.8` (**prebuilt binaries available;** manual build is required on unsupported architectures, see: [skia-canvas](https://github.com/samizdatco/skia-canvas#compiling-from-source) for more details)
 
 ## Installation
 ---
