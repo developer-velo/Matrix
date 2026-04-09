@@ -1,3 +1,8 @@
+### ⚠️ Archived
+This project is no longer being maintained due to time constraints.
+
+---
+
 <p align="center">
   <img src=".github/assets/d4cdcdb2-51d3-4106-8888-45baaf5574f3.png#gh-light-mode-only">
   <img src=".github/assets/1870a8b8-e237-404b-be93-e7a7313c79de.png#gh-dark-mode-only">
